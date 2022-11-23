@@ -1,1 +1,4 @@
 git submodule add --force git@github.com:leberman/core-hamkhone.git ./public_html
+$host = 'mysql';
+$user = 'root';
+$pass = 'rootpassword';
