@@ -1,7 +1,7 @@
 version: "3.2"
 services:
   php:
-    build: 
+    build:
       context: './php/'
       args:
        PHP_VERSION: ${PHP_VERSION}
@@ -9,6 +9,7 @@ services:
       - backend
     volumes:
       - ${PROJECT_ROOT}/:/var/www/html/
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     container_name: php
   apache:
     build:
@@ -41,6 +42,23 @@ services:
       MYSQL_USER: "${DB_USERNAME}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
     container_name: mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 300G
+      MEMORY_LIMIT: 300G
+      MAX_EXECUTION_TIME: 30000000
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+    container_name: phpmyadmin
+    ports:
+      - 8080:80
+    depends_on:
+      - mysql
+    networks:
+      - backend
 networks:
   frontend:
   backend:
